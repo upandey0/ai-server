@@ -1,9 +1,14 @@
 import dotenv from 'dotenv'
 dotenv.config()
-import express from 'express'
+import app from './app.js'
+import dbConnection from './config/dbConnection.js'
 
-const app = express()
+
+// database connection initialized : 
+dbConnection();
+
+// listen of server : 
 
 app.listen(process.env.PORT, ()=>{
-    console.log(process.env.PORT)
+    console.log('server started at port ' , process.env.PORT)
 })

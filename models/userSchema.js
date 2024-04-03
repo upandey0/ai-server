@@ -50,13 +50,6 @@ const userSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: 'Office',
   },
-  address: {
-    street: String,
-    city: String,
-    state: String,
-    country: String,
-    zipcode: String,
-  },
 });
-
-export default model('User', userSchema);
+const User = model('User', userSchema);
+export default User;

@@ -14,11 +14,15 @@ const reportSchema = new Schema(
       type: String,
       required: true,
     },
+    companyBelongs : {
+      type: Schema.Types.ObjectId,
+      ref: 'Company'
+    },
     thumbnailURL : {
         type: String,
     }
   },
   { timestamps: true }
 );
-
-export default model('Report', reportSchema);
+const Report = model('Report', reportSchema);
+export default Report;

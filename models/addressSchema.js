@@ -4,6 +4,7 @@ const addressSchema = new Schema ( {
 
         locationName : {
             type : String,
+            required: true
         },
 
         city : {

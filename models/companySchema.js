@@ -1,5 +1,5 @@
 import {Schema,model} from 'mongoose'
-import officeSchema from './officeSchema'
+
 
 const companySchema = new Schema({
     name: {
@@ -11,5 +11,5 @@ const companySchema = new Schema({
         ref: 'Office'
     }
 })
-
-export default model('Company', companySchema);
+const Company = model('Company', companySchema);
+export default Company;

@@ -1,4 +1,4 @@
-import mongoose, { Schema, model} from "mongoose";
+import  { Schema, model} from "mongoose";
 import addressSchema from "./addressSchema";
 
 const officeSchema = new Schema ({
@@ -15,5 +15,5 @@ const officeSchema = new Schema ({
     },
 
 })
-
-export default model('Office', officeSchema);
+const Office = model('Office', officeSchema);
+export default Office;
