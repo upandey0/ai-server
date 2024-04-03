@@ -1,0 +1,19 @@
+import mongoose, { Schema, model} from "mongoose";
+import addressSchema from "./addressSchema";
+
+const officeSchema = new Schema ({
+    name: {
+        type: String,
+    },
+    country: {
+        type: String,
+        required: true
+    },
+    address: {
+        type : addressSchema,
+        required: true
+    },
+
+})
+
+export default model('Office', officeSchema);
