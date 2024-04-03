@@ -14,6 +14,9 @@ const reportSchema = new Schema(
       type: String,
       required: true,
     },
+    thumbnailURL : {
+        type: String,
+    }
   },
   { timestamps: true }
 );

@@ -8,11 +8,24 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: false,
+    unique: true,
+    sparse: true,
   },
   password: {
     type: String,
+    required: false,
+  },
+  authProvider: {
+    type: String,
     required: true,
+    enum: ['password', 'google', 'facebook'],
+  },
+  thirdPartyId: {
+    type: String,
+    required: function() {
+      return this.authProvider !== 'password';
+    },
   },
   auth0Id: {
     type: String,
