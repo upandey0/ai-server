@@ -3,6 +3,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import userRouter from './routes/user.routes.js'
 import companyRoutes from './routes/user.company.routes.js'
+import fileRoutes from './routes/fileRoutes.js';
+
 
 // Application Instance : 
 const app = express()
@@ -17,7 +19,9 @@ app.use(express.urlencoded({extended: true, limit: "32kb"}))
 app.use(express.static("public"))
 
 app.use('/api/user', userRouter);
-app.use('/api/companies',companyRoutes)
+app.use('/api/companies',companyRoutes);
+// Use the file routes
+app.use('/api/files', fileRoutes);
 
 
 export default app;
