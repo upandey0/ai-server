@@ -4,7 +4,7 @@ import { userSignUp } from '../controllers/user.js';
 
 const router = express.Router()
 
-router.post('/api/user/signup', userSignUp);
+router.post('/signup', userSignUp);
 
 
 

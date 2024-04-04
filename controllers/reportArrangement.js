@@ -3,7 +3,6 @@ import Report from '../models/reportSchema.js';
 
 
 const reportArrangement = async (req, res,next) => {
-  const { address } = req.body;
   const userId = req.user._id;
 
   try {

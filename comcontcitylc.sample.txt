@@ -1,0 +1,32 @@
+# Sample Output for a company X in Y county in City A and location P is :
+
+{
+  "categoryName1": [
+    {
+      "_id": "report1Id",
+      "title": "Report 1 Title",
+      "companyBelongs": { /* company details */ },
+      "thumbnailURL": "https://example.com/thumbnail.jpg",
+      "createdAt": "2023-05-01T10:00:00.000Z",
+      "updatedAt": "2023-05-01T10:00:00.000Z"
+    },
+    {
+      "_id": "report2Id",
+      "title": "Report 2 Title",
+      "companyBelongs": { /* company details */ },
+      "thumbnailURL": "https://example.com/thumbnail2.jpg",
+      "createdAt": "2023-05-02T12:30:00.000Z",
+      "updatedAt": "2023-05-02T12:30:00.000Z"
+    }
+  ],
+  "categoryName2": [
+    {
+      "_id": "report3Id",
+      "title": "Report 3 Title",
+      "companyBelongs": { /* company details */ },
+      "thumbnailURL": "https://example.com/thumbnail3.jpg",
+      "createdAt": "2023-05-03T15:45:00.000Z",
+      "updatedAt": "2023-05-03T15:45:00.000Z"
+    }
+  ]
+}

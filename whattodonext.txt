@@ -1,0 +1,4 @@
+# When user signup : - Updated company and other required details to setup his corresponding account.
+# Handling of the users Reports upload.
+# When user login return all office address as well as related info to the user.
+# Testing with required data -- till whatever functionality implemented

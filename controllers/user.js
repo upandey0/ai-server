@@ -1,5 +1,5 @@
-import  User from "../models/userModels.js";
-// import bcryptjs from 'bcryptjs';
+import  User from "../models/userSchema.js";
+
 
 //created the function to signup
 export const userSignUp=async (req,res)=>{

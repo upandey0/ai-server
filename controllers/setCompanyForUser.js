@@ -13,6 +13,9 @@ const setCompanyForUser = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    if(!name || !country || !city || !location)
+      return res.status(400).json({message : 'Some Fields are Missing'})
+
     // Check if the company with the same name, country, city, and location already exists for the user
     const existingCompany = await Company.findOne({
       name,

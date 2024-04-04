@@ -1,15 +1,26 @@
-import {Schema,model} from 'mongoose'
-
+import { Schema, model } from 'mongoose';
 
 const companySchema = new Schema({
-    name: {
+  name: {
+    type: String,
+    required: true,
+  },
+  user : {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  country: {
+    type: String,
+    required: true,
+  },
+  cities: [{
+    name: String,
+    locations: [{
+      name: {
         type: String,
-        required: true
-    },
-    offices: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Office'
-    }
-})
-const Company = model('Company', companySchema);
+      },
+    }],
+  }],
+});
+const Company = model('Company', companySchema)
 export default Company;

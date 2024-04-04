@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import companySchema from './companySchema';
 
 const userSchema = new Schema({
   name: {
@@ -18,21 +17,23 @@ const userSchema = new Schema({
   },
   authProvider: {
     type: String,
-    required: true,
+    required: false,
     enum: ['password', 'google', 'facebook'],
   },
   thirdPartyId: {
     type: String,
-    required: function() {
-      return this.authProvider !== 'password';
-    },
   },
   auth0Id: {
     type: String,
     required: true,
   },
+  isCompanySet : {
+    type: Boolean,
+    default: false
+  },
   companies: {
-    type: [companySchema],
+    type: [Schema.Types.ObjectId],
+    ref: 'Company'
   },
   refreshToken: {
     type: String,
@@ -40,7 +41,6 @@ const userSchema = new Schema({
   subscription: {
     type: Schema.Types.ObjectId,
     ref: 'Subscription',
-    required: true,
   },
   reports: {
     type: [Schema.Types.ObjectId],
