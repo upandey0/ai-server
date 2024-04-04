@@ -9,7 +9,7 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
-app.use(express.urlencoded())
+app.use(express.urlencoded({extended: true, limit: "32kb"}))
 app.use(express.static("public"))
 
 app.use('/', userRouter);
