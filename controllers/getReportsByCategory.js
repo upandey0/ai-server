@@ -2,7 +2,7 @@ import Report from '../models/reportSchema.js'
 import Category from '../models/categorySchema.js'
 
 const getReportsByCategory = async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.userId;
 
     try {
         const allReport = await Report.find({ userId: userId });

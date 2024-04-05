@@ -49,7 +49,11 @@ const setCompanyForUser = async (req, res) => {
         },
       ],
     });
-
+    const isCompanyStatus = user.isCompanySet;
+    if (!user.isCompanySet) {
+      await User.findByIdAndUpdate(userId, { isCompanySet: true });
+    }
+    // User.findByIdAndUpdate({_id: userId} , {isCompanySet : true})
     // Add the new company to the user's companies array
     user.companies.push(newCompany._id);
     await user.save();
