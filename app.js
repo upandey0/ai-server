@@ -3,7 +3,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import userRouter from './routes/user.routes.js'
 import companyRoutes from './routes/user.company.routes.js'
-import reportRouter from './routes/report.routes.js'
+import fileRoutes from './routes/fileRoutes.js';
+
 
 // Application Instance : 
 const app = express()
@@ -19,7 +20,6 @@ app.use(express.static("public"))
 
 app.use('/api/user', userRouter);
 app.use('/api/companies',companyRoutes)
-app.use('/api/user/report',reportRouter)
 
 
 export default app;
