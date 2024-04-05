@@ -1,61 +1,50 @@
-import User from '../models/userSchema.js';
-import Company from '../models/companySchema.js';
+import Report from '../models/reportSchema.js'
+import Company from '../models/companySchema.js'
+import Category from '../models/categorySchema.js'
 
-const setCompanyForUser = async (req, res) => {
-  const userId = req.params.userId;
-  const { name, country, city, location } = req.body;
+const filterByCompany = async (req, res) => {
+    const { companyName, country, city, location, userId } = req.body;
+    try {
+        const companyId = await Company.findOne({ $and: [{ name: companyName }, { country }, { user: userId }, { 'cities.name': city }, { 'cities.location.name': location }] }, { _id: 1 });
 
-  try {
-    // Find the user by userId
-    const user = await User.findById(userId);
+        if (!companyId) {
+            return res.status(400).json({ success: false, message: 'Some fields are missing' });
+        } else {
+            const belongingReports = await Report.find({ companyBelongs: companyId });
+            if (!belongingReports || belongingReports.length === 0) {
+                return res.status(404).json({ success: true, message: "No reports were found" });
+            }
+            else {
+                let categoryWiseReport = {};
 
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+                // Iterate through each report and fetch category information
+                for (const report of belongingReports) {
+                    const categoryToFind = report.category;
+
+                    // Use await to wait for the Category.find() promise to resolve
+                    const category = await Category.findById(categoryToFind);
+
+                    if (!category) {
+                        // Handle case where category is not found
+                        console.log(`Category not found for report: ${report._id}`);
+                    } else {
+                        // Add report to categoryWiseReport
+                        if (!categoryWiseReport[category.name]) {
+                            categoryWiseReport[category.name] = [];
+                        }
+                        categoryWiseReport[category.name].push(report);
+                    }
+                }
+
+                return res.status(200).json({ success: true, message: 'All Reports are sent', categoryWiseReport });
+            }
+
+        }
+    } catch (e) {
+
+        return res.status(500).json({ success: false, message: 'Internal Server Issue' })
+
     }
+}
 
-    // Check if the company with the same name, country, city, and location already exists for the user
-    const existingCompany = await Company.findOne({
-      name,
-      user: userId,
-      country,
-      cities: {
-        $elemMatch: {
-          name: city,
-          locations: {
-            $elemMatch: {
-              name: location,
-            },
-          },
-        },
-      },
-    });
-
-    if (existingCompany) {
-      return res.status(400).json({ error: 'Company with the same details already exists for this user' });
-    }
-
-    // Create a new company
-    const newCompany = await Company.create({
-      name,
-      user: userId,
-      country,
-      cities: [
-        {
-          name: city,
-          locations: location ? [{ name: location }] : [],
-        },
-      ],
-    });
-
-    // Add the new company to the user's companies array
-    user.companies.push(newCompany._id);
-    await user.save();
-
-    res.status(201).json(newCompany);
-  } catch (error) {
-    console.error('Error setting company for user:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
-
-export default setCompanyForUser;
+export default filterByCompany

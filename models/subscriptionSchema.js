@@ -19,8 +19,6 @@ const subscriptionSchema = new Schema({
          type :  [subscriptionFeatureSchema]
     }
         
-    
-
 })
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);
