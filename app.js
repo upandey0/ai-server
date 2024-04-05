@@ -20,6 +20,8 @@ app.use(express.static("public"))
 
 app.use('/api/user', userRouter);
 app.use('/api/companies',companyRoutes)
+app.use('/api/files', fileRoutes);
+
 
 
 export default app;
