@@ -3,12 +3,24 @@ import Company from '../models/companySchema.js'
 import Category from '../models/categorySchema.js'
 
 const filterByCompany = async (req, res) => {
-    const { companyName, country, city, location, userId } = req.body;
-    try {
-        const companyId = await Company.findOne({ $and: [{ name: companyName }, { country }, { user: userId }, { 'cities.name': city }, { 'cities.location.name': location }] }, { _id: 1 });
+    const { companyName, country, city, location } = req.body;
 
+    const userId = req.userId
+    console.log("name : ", companyName, "country : ", country);
+    console.log("City: ", city, "Location : ", location);
+    // console.log(userId)
+    try {
+       
+        const companyId = await Company.findOne({
+            user: userId,
+            name: companyName,
+            country: country,
+            'cities.name': city,
+            'cities.locations.name': location
+          });
+        console.log(companyId)
         if (!companyId) {
-            return res.status(400).json({ success: false, message: 'Some fields are missing' });
+            return res.status(400).json({ success: false, message: 'No Company Found' });
         } else {
             const belongingReports = await Report.find({ companyBelongs: companyId });
             if (!belongingReports || belongingReports.length === 0) {
@@ -42,7 +54,7 @@ const filterByCompany = async (req, res) => {
         }
     } catch (e) {
 
-        return res.status(500).json({ success: false, message: 'Internal Server Issue' })
+        return res.status(500).json({ success: false, message: 'Internal Server Issue', error : e.message })
 
     }
 }
