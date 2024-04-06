@@ -12,15 +12,19 @@ const companySchema = new Schema({
   country: {
     type: String,
     required: true,
+    cities : [
+      {
+        name: String,
+        locations : [
+          {
+            name : {
+              type: String,
+            }
+          }
+        ]
+      }
+    ]
   },
-  cities: [{
-    name: String,
-    locations: [{
-      name: {
-        type: String,
-      },
-    }],
-  }],
 });
 const Company = model('Company', companySchema)
 export default Company;

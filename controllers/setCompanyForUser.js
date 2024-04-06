@@ -21,16 +21,8 @@ const setCompanyForUser = async (req, res) => {
       name,
       user: userId,
       country,
-      cities: {
-        $elemMatch: {
-          name: city,
-          locations: {
-            $elemMatch: {
-              name: location,
-            },
-          },
-        },
-      },
+      'cities.name': city,
+      'cities.locations.name': location,
     });
 
     if (existingCompany) {
@@ -42,10 +34,14 @@ const setCompanyForUser = async (req, res) => {
       name,
       user: userId,
       country,
-      cities: [
+      'country.cities': [
         {
           name: city,
-          locations: location ? [{ name: location }] : [],
+          locations: [
+            {
+              name: location,
+            },
+          ],
         },
       ],
     });

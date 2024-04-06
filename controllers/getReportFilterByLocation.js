@@ -15,8 +15,8 @@ const filterByCompany = async (req, res) => {
             user: userId,
             name: companyName,
             country: country,
-            'cities.name': city,
-            'cities.locations.name': location
+            'country.cities.name': city,
+            'country.cities.locations.name': location
           });
         console.log(companyId)
         if (!companyId) {

@@ -22,7 +22,7 @@ export const userSignUp = async (req, res) => {
       email,
       authProvider,
       thirdPartyId,
-
+      isCompanySet : false
     });
 
     // Save the new user to the database
