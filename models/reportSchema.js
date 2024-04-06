@@ -20,6 +20,7 @@ const reportSchema = new Schema(
     },
     thumbnailURL : {
         type: String,
+       
     }
   },
   { timestamps: true }
