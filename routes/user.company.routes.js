@@ -4,6 +4,6 @@ import authenticateUser from "../middlewares/authenticateUser.js";
 
 const router = express.Router();
 
-router.post('/:userId',authenticateUser,setCompanyForUser)
+router.post('/setcompany',authenticateUser,setCompanyForUser)
 
 export default router;
