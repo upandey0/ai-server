@@ -2,7 +2,7 @@ import User from '../models/userSchema.js';
 import Company from '../models/companySchema.js';
 
 const setCompanyForUser = async (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.userId;
   const { name, country, city, location } = req.body;
 
   try {
