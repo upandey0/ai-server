@@ -5,25 +5,31 @@ const companySchema = new Schema({
     type: String,
     required: true,
   },
-  user : {
+  user: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
   },
   country: {
-    type: String,
-    required: true,
-    cities : [
+    name: {
+      type: String,
+      required: true,
+    },
+    cities: [
       {
-        name: String,
-        locations : [
+        name: {
+          type: String,
+          required: true,
+        },
+        locations: [
           {
-            name : {
+            name: {
               type: String,
-            }
-          }
-        ]
-      }
-    ]
+              required: true,
+            },
+          },
+        ],
+      },
+    ],
   },
 });
 const Company = model('Company', companySchema)

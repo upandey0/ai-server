@@ -14,7 +14,7 @@ const filterByCompany = async (req, res) => {
         const companyId = await Company.findOne({
             user: userId,
             name: companyName,
-            country: country,
+            'country.name': country,
             'country.cities.name': city,
             'country.cities.locations.name': location
           });

@@ -20,9 +20,9 @@ const setCompanyForUser = async (req, res) => {
     const existingCompany = await Company.findOne({
       name,
       user: userId,
-      country,
-      'cities.name': city,
-      'cities.locations.name': location,
+      'country.name': country,
+      'country.cities.name': city,
+      'country.cities.locations.name': location,
     });
 
     if (existingCompany) {
@@ -33,17 +33,19 @@ const setCompanyForUser = async (req, res) => {
     const newCompany = await Company.create({
       name,
       user: userId,
-      country,
-      'country.cities': [
-        {
-          name: city,
-          locations: [
-            {
-              name: location,
-            },
-          ],
-        },
-      ],
+      country: {
+        name: country,
+        cities: [
+          {
+            name: city,
+            locations: [
+              {
+                name: location,
+              },
+            ],
+          },
+        ],
+      },
     });
     const isCompanyStatus = user.isCompanySet;
     if (!user.isCompanySet) {

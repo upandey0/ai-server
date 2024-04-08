@@ -17,7 +17,7 @@ export const uploadFile = async (req, res) => {
     const user = await User.findById(userId);
    
     if (!user) {
-      return res.status(404).json({ message: "User not found for the given ID" });
+      return res.status(404).json({ message: "User not found for the given ID", success: false });
     }
     const cloudinaryUpload = await cloudinary.uploader.upload(req.file.path,
      {
@@ -42,6 +42,6 @@ export const uploadFile = async (req, res) => {
     // await user.save()
   } catch (error) {
     console.error("error in uploading file", error);
-    res.status(400).json({ message: "failed to upload a file" });
+    res.status(400).json({ message: "failed to upload a file",  errorP : error.message });
   }
 };

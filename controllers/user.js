@@ -40,7 +40,7 @@ export const userSignUp = async (req, res) => {
     });
   } catch (error) {
     console.error('Error signing up:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' , message: error.message});
   }
 }
 
@@ -62,10 +62,10 @@ export const userSignIn = async (req, res) => {
       //     console.log(company)
           allCompanies.push(company);
         } catch (e) {
-
+            return res.status(500).json({success: false, message : e.message})
         }
       }
-      return res.cookie('token', token).status(200).json({ success: true, message: "User Logged In",setCompanyForUser, allCompanies });
+      return res.cookie('token', token).status(200).json({ success: true, message: "User Logged In",setCompanyForUser, allCompanies, user });
     }
   } catch (e) {
     return res.json(e);
