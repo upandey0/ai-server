@@ -22,7 +22,7 @@ export const userSignUp = async (req, res) => {
       email,
       authProvider,
       thirdPartyId,
-      isCompanySet : false
+      isCompanySet: false
     });
 
     // Save the new user to the database
@@ -40,7 +40,7 @@ export const userSignUp = async (req, res) => {
     });
   } catch (error) {
     console.error('Error signing up:', error);
-    res.status(500).json({ error: 'Internal server error' , message: error.message});
+    res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 }
 
@@ -59,15 +59,31 @@ export const userSignIn = async (req, res) => {
       for (const office of allofficeIds) {
         try {
           const company = await Company.findOne({ _id: office })
-      //     console.log(company)
+          //     console.log(company)
           allCompanies.push(company);
         } catch (e) {
-            return res.status(500).json({success: false, message : e.message})
+          return res.status(500).json({ success: false, message: e.message })
         }
       }
-      return res.cookie('token', token).status(200).json({ success: true, message: "User Logged In",setCompanyForUser, allCompanies, user });
+      return res.cookie('token', token).status(200).json({ success: true, message: "User Logged In", setCompanyForUser, allCompanies, user });
     }
   } catch (e) {
     return res.json(e);
   }
+}
+
+export const userLogOut = async (req, res) => {
+  const token = req.cookies.token;
+  if (!token)
+    return res.status(404).json({ success: false, message: 'Unautorized user' });
+
+  const { id, auth0Id } = jwt.decode(token, process.env.JWT_SECRET_KEY);
+  res.clearCookie('token');
+
+  try {
+    return res.status(200).json({ success: true, message: 'Logout successful' });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Error logging out', error: error.message });
+  }
+
 }
