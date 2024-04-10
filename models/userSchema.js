@@ -1,29 +1,18 @@
 import { Schema, model } from 'mongoose';
 
 const userSchema = new Schema({
-  name: {
+  email: {
     type: String,
     required: true,
+    unique: true
   },
   email: {
     type: String,
-    required: false,
+    required: true,
     unique: true,
     sparse: true,
   },
   password: {
-    type: String,
-    required: false,
-  },
-  authProvider: {
-    type: String,
-    required: false,
-    enum: ['password', 'google', 'facebook'],
-  },
-  thirdPartyId: {
-    type: String,
-  },
-  auth0Id: {
     type: String,
     required: true,
   },

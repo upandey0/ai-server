@@ -8,55 +8,74 @@ const setCompanyForUser = async (req, res) => {
   try {
     // Find the user by userId
     const user = await User.findById(userId);
-
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if(!name || !country || !city || !location)
-      return res.status(400).json({message : 'Some Fields are Missing'})
+    if (!name || !country || !city || !location) {
+      return res.status(400).json({ message: 'Some Fields are Missing' });
+    }
 
     // Check if the company with the same name, country, city, and location already exists for the user
-    const existingCompany = await Company.findOne({
+    let company = await Company.findOne({
       name,
       user: userId,
       'country.name': country,
-      'country.cities.name': city,
-      'country.cities.locations.name': location,
     });
 
-    if (existingCompany) {
-      return res.status(400).json({ error: 'Company with the same details already exists for this user' });
+    if (company) {
+      // Check if the city already exists for the company
+      const cityExists = company.country.cities.some((c) => c.name === city);
+      if (cityExists) {
+        // Check if the location already exists for the city
+        const locationExists = company.country.cities.find((c) => c.name === city).locations.some((l) => l.name === location);
+        if (!locationExists) {
+          // Add the new location to the existing city
+          await Company.updateOne(
+            { _id: company._id, 'country.cities.name': city },
+            { $push: { 'country.cities.$.locations': { name: location } } }
+          );
+        }
+      } else {
+        // Add the new city and location to the company
+        await Company.updateOne(
+          { _id: company._id },
+          {
+            $push: {
+              'country.cities': {
+                name: city,
+                locations: [{ name: location }],
+              },
+            },
+          }
+        );
+      }
+    } else {
+      // Create a new company
+      company = await Company.create({
+        name,
+        user: userId,
+        country: {
+          name: country,
+          cities: [
+            {
+              name: city,
+              locations: [{ name: location }],
+            },
+          ],
+        },
+      });
     }
 
-    // Create a new company
-    const newCompany = await Company.create({
-      name,
-      user: userId,
-      country: {
-        name: country,
-        cities: [
-          {
-            name: city,
-            locations: [
-              {
-                name: location,
-              },
-            ],
-          },
-        ],
-      },
-    });
-    const isCompanyStatus = user.isCompanySet;
+    // Update the user's isCompanySet field if it's not already set
     if (!user.isCompanySet) {
       await User.findByIdAndUpdate(userId, { isCompanySet: true });
     }
-    // User.findByIdAndUpdate({_id: userId} , {isCompanySet : true})
-    // Add the new company to the user's companies array
-    user.companies.push(newCompany._id);
-    await user.save();
 
-    res.status(201).json(newCompany);
+    // Add the company to the user's companies array
+    user.companies.push(company._id);
+    await user.save();
+    res.status(201).json(company);
   } catch (error) {
     console.error('Error setting company for user:', error);
     res.status(500).json({ error: 'Internal server error' });

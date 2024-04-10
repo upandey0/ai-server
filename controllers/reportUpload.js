@@ -1,3 +1,5 @@
+import Category from '../models/categorySchema.js'
+import Company from '../models/companySchema.js'
 const reportUpload = async (req, res) => {
   const { title, category, subcategory, country, city, location } = req.body;
   const { userId } = req;
@@ -61,3 +63,5 @@ const reportUpload = async (req, res) => {
     return res.status(500).json({ message: e.message, success: false });
   }
 };
+
+export default reportUpload;
