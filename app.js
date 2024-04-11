@@ -15,6 +15,9 @@ app.use(
     })
   );
   
+app.get('/', (req,res)=>{
+    res.send('Hello There from my deployed Sercer')
+})
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: '32kb' }));
