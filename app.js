@@ -12,7 +12,8 @@ const app = express()
 
 app.use(express.json())
 app.use(cors( {
-    origin: process.env.ORIGIN,
+    origin: ["https://fa-ai-client-dashboard.vercel.app"],
+    methods: ["GET","POST"],
     credentials: true
 }))
 app.use(cookieParser())
