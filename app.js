@@ -15,7 +15,7 @@ app.use(express.static('public'));
 
 app.use(
   cors({
-    origin: ['https://test-theta-livid-88.vercel.app', 'https://fa-ai-client-dashboard.vercel.app'],
+    origin: ['https://fa-ai-client-dashboard.vercel.app/*'],
     credentials: true,
   })
 );
