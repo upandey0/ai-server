@@ -12,7 +12,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors( {
-    origin: ["https://fa-ai-client-dashboard.vercel.app"],
+    origin: "https://test-theta-livid-88.vercel.app/",
     methods: ["GET","POST"],
     credentials: true
 }))
