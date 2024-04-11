@@ -1,0 +1,20 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 30
+      arrivalRate: 5
+    - duration: 30
+      arrivalRate: 10
+scenarios:
+  - flow:
+      - post:
+          url: "/api/user/signup"
+          json:
+            username: "rubusiness0@gmailll.com"
+            password: "123456"
+          capture:
+            json: "$.token"
+            as: "token"
+      - get:
+          url: "/api/user"
+          

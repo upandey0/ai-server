@@ -14,11 +14,11 @@ const authenticateUser = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
 
     // Extract user id and auth0Id from the decoded token
-    const { id, auth0Id } = decoded
+    const { id, email } = decoded
 
     // Set the user id and auth0Id in the request object for further processing
     req.userId = id
-    req.auth0Id = auth0Id
+    req.email = email
 
     // Call next middleware
     next()

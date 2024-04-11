@@ -35,10 +35,7 @@ const userSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: 'Report',
   },
-  offices: {
-    type: [Schema.Types.ObjectId],
-    ref: 'Office',
-  },
+
 });
 const User = model('User', userSchema);
 export default User;

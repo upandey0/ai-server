@@ -1,18 +1,18 @@
 import User from "../models/userSchema.js";
 import jwt from 'jsonwebtoken'
 import Company from '../models/companySchema.js'
-import setCompanyForUser from "./setCompanyForUser.js";
 import bcrypt from 'bcryptjs'
-import nodemailer from 'nodemailer'
-
-
-
+import emailValidator from 'email-validator'
 
 
 export const userSignUp = async (req, res) => {
   try {
     const { email, username, password } = req.body;
     // Check if the user already exists
+    const emailValidation = emailValidator.validate(email)
+    if(!emailValidation){
+      return res.status(400).json({success: false, message: 'Kindly Provide Correct Email'})
+    }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -41,10 +41,13 @@ export const userSignUp = async (req, res) => {
   }
 }
 
-
-
 export const userSignIn = async (req, res) => {
   const {  password, email } = req.body;
+
+  const emailValidation = emailValidator.validate(email)
+    if(!emailValidation){
+      return res.status(400).json({success: false, message: 'Kindly Provide Correct Email'})
+    }
 
   try {
     const user = await User.findOne({ email })
@@ -103,6 +106,9 @@ export const handleRefresh = async (req, res) => {
   if (!token)
     return res.json({ success: false, message: 'Invalid' });
   const { id, email } = jwt.decode(token, process.env.JWT_SECRET_KEY);
+  if(!id || !email) {
+    return res.status(401).json({success: false, message: 'Unauthorized user'})
+  }
   try {
     const user = await User.findOne({ _id: id });
     if (!user) {

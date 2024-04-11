@@ -17,12 +17,7 @@ const setCompanyForUser = async (req, res) => {
     }
 
     // Check if the company with the same name, country, city, and location already exists for the user
-    let company = await Company.findOne({
-      name,
-      user: userId,
-      'country.name': country,
-    });
-
+    let company = await Company.findOne({ name, user: userId, 'country.name': country });
     if (company) {
       // Check if the city already exists for the company
       const cityExists = company.country.cities.some((c) => c.name === city);
@@ -40,14 +35,7 @@ const setCompanyForUser = async (req, res) => {
         // Add the new city and location to the company
         await Company.updateOne(
           { _id: company._id },
-          {
-            $push: {
-              'country.cities': {
-                name: city,
-                locations: [{ name: location }],
-              },
-            },
-          }
+          { $push: { 'country.cities': { name: city, locations: [{ name: location }] } } }
         );
       }
     } else {
@@ -55,15 +43,7 @@ const setCompanyForUser = async (req, res) => {
       company = await Company.create({
         name,
         user: userId,
-        country: {
-          name: country,
-          cities: [
-            {
-              name: city,
-              locations: [{ name: location }],
-            },
-          ],
-        },
+        country: { name: country, cities: [{ name: city, locations: [{ name: location }] }] },
       });
     }
 
@@ -72,10 +52,11 @@ const setCompanyForUser = async (req, res) => {
       await User.findByIdAndUpdate(userId, { isCompanySet: true });
     }
 
-    // Add the company to the user's companies array
-    user.companies.push(company._id);
-    await user.save();
-    res.status(201).json(company);
+    // Fetch the updated user object
+    const updatedUser = await User.findById(userId);
+
+
+    res.status(201).json({ company});
   } catch (error) {
     console.error('Error setting company for user:', error);
     res.status(500).json({ error: 'Internal server error' });
