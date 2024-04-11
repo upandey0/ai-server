@@ -55,8 +55,11 @@ const setCompanyForUser = async (req, res) => {
     // Fetch the updated user object
     const updatedUser = await User.findById(userId);
 
-
-    res.status(201).json({ company});
+    res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.status(201).json({ company });
   } catch (error) {
     console.error('Error setting company for user:', error);
     res.status(500).json({ error: 'Internal server error' });

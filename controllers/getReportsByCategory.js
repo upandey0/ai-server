@@ -1,5 +1,5 @@
 import Report from '../models/reportSchema.js'
-import Category from '../models/categorySchema.js' 
+import Category from '../models/categorySchema.js'
 const getReportsByCategory = async (req, res) => {
   const { userId, email } = req;
 
@@ -24,6 +24,10 @@ const getReportsByCategory = async (req, res) => {
 
         categoryWiseReport[category.categoryName].reports.push(report);
       }
+      res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
       return res.status(200).json({
         success: true,
