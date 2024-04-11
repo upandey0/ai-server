@@ -16,6 +16,17 @@ app.use(cors( {
     methods: ["GET","POST"],
     credentials: true
 }))
+app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+      // Handle preflight requests by responding with appropriate CORS headers
+      res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      return res.status(200).end();
+    }
+    next();
+  });
 app.use(cookieParser())
 app.use(express.urlencoded({extended: true, limit: "32kb"}))
 app.use(express.static("public"))
