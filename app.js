@@ -11,7 +11,8 @@ const app = express();
 app.use(morgan('dev'));
 app.use(
     cors({
-      origin: "*"
+      origin: "https://fa-ai-client-dashboard.vercel.app",
+      credentials: true
     })
   );
   

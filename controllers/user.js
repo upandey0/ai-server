@@ -34,7 +34,7 @@ export const userSignUp = async (req, res) => {
 
     const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET_KEY);
 
-    // res.cookie('token', token);
+    res.cookie('token', token);
     res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
