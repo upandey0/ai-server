@@ -51,6 +51,7 @@ export const userSignUp = async (req, res) => {
       success: true,
       message: 'Signup successful',
       user: { email: savedUser.email, isCompanySet: false },
+      token
     });
   } catch (e) {
     return res.status(500).json({ success: false, message: e.message });
@@ -100,11 +101,11 @@ export const userSignIn = async (req, res) => {
         expires: expirationDate,
         httpOnly: true,
         secure: true, // Ensure secure attribute for HTTPS
-        path: '/', // Set path to root
+   // Set path to root
         sameSite: 'none', // Allow cross-site cookies
       });
     
-      return res.status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
+      return res.status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser, token });
     }
   } catch (e) {
     return res.json(e);
@@ -145,6 +146,6 @@ export const handleRefresh = async (req, res) => {
       return res.status(200).json({ success: true, message: 'User Logged In', user });
     }
   } catch (e) {
-    return res.status(500).json({ success: false, message: e.message });
+    return res.status(500).json({ success: false, message: e.message, token });
   }
 }
