@@ -37,8 +37,8 @@ export const userSignUp = async (req, res) => {
     res.cookie('token', token, {
       expires: expirationDate,
       httpOnly: true,
-      domain: 'https://f-ai-serve.up.railway.app/', 
-      path: '/', // Set the path to the root
+      domain: '.up.railway.app', // Use the base domain without the protocol
+      path: '/',
       sameSite: 'strict',
     });
 
@@ -95,8 +95,8 @@ export const userSignIn = async (req, res) => {
       res.cookie('token', token, {
         expires: expirationDate,
         httpOnly: true,
-        domain: 'https://f-ai-serve.up.railway.app/', 
-        path: '/', // Set the path to the root
+        domain: '.up.railway.app', // Use the base domain without the protocol
+        path: '/',
         sameSite: 'strict',
       });
       return res.status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
@@ -118,7 +118,7 @@ export const userLogOut = async (req, res) => {
 
     // Clear the cookie
     res.clearCookie('token', {
-      domain: 'https://f-ai-serve.up.railway.app/', 
+      domain: '.up.railway.app/', 
       path: '/',
       httpOnly: true,
       secure: true,
