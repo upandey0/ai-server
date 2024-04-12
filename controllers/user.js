@@ -41,7 +41,7 @@ export const userSignUp = async (req, res) => {
       sameSite: 'strict',
     });
 
-    
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
     return res.status(201).json({
       success: true,
       message: 'Signup successful',
@@ -91,6 +91,7 @@ export const userSignIn = async (req, res) => {
       }
       
       const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
       return res.cookie('token', token , { expires: expirationDate, httpOnly: true }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
     }
   } catch (e) {
