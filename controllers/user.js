@@ -4,7 +4,6 @@ import Company from '../models/companySchema.js'
 import bcrypt from 'bcryptjs'
 import emailValidator from 'email-validator'
 
-
 export const userSignUp = async (req, res) => {
   try {
     const { email, username, password } = req.body;
@@ -36,7 +35,7 @@ export const userSignUp = async (req, res) => {
       { expiresIn: '2d' } // Set the token expiration to 2 days
     );
 
-    // Set the cookie with a 2-day expiration
+    // Set the cookie with a 2-day expiration, secure flag, and SameSite=none
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
     const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
@@ -44,8 +43,9 @@ export const userSignUp = async (req, res) => {
       expires: expirationDate,
       httpOnly: true,
       sameSite: 'none',
+      secure: true
     });
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  
     return res.status(201).json({
       success: true,
       message: 'Signup successful',
@@ -81,13 +81,11 @@ export const userSignIn = async (req, res) => {
       const toSendUser = {
         email: user.email,
         isCompanySet: user.isCompanySet,
-
       }
 
       for (const office of allofficeIds) {
         try {
           const company = await Company.findOne({ _id: office })
-
           allCompanies.push(company);
         } catch (e) {
           return res.status(500).json({ success: false, message: e.message })
@@ -97,8 +95,13 @@ export const userSignIn = async (req, res) => {
       res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
 
       const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
-      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-      return res.cookie('token', token, { expires: expirationDate, httpOnly: true, SameSite: 'none' }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
+    
+      return res.cookie('token', token, {
+        expires: expirationDate,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
+      }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
     }
   } catch (e) {
     return res.json(e);
@@ -122,7 +125,6 @@ export const userLogOut = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Error logging out', error: error.message });
   }
-
 }
 
 export const handleRefresh = async (req, res) => {
