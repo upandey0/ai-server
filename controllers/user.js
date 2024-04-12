@@ -9,9 +9,9 @@ export const userSignUp = async (req, res) => {
   try {
     const { email, username, password } = req.body;
     // Check if the user already exists
-    const emailValidation = emailValidator.validate(email)
+    const emailValidation = emailValidator.validate(email);
     if (!emailValidation) {
-      return res.status(400).json({ success: false, message: 'Kindly Provide Correct Email' })
+      return res.status(400).json({ success: false, message: 'Kindly Provide Correct Email' });
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -29,21 +29,26 @@ export const userSignUp = async (req, res) => {
       password: hashedPassword,
       username,
     });
-
-    const savedUser = await newUser.save()
-
+    const savedUser = await newUser.save();
     const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET_KEY);
 
-    res.cookie('token', token);
+    // Set the cookie with a 2-day expiration
+    const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
+    res.cookie('token', token, { expires: expirationDate });
+
     res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    return res.status(201).json({ success: true, message: 'Signup successful', user: { email: savedUser.email, isCompanySet: false } })
+    return res.status(201).json({
+      success: true,
+      message: 'Signup successful',
+      user: { email: savedUser.email, isCompanySet: false },
+    });
   } catch (e) {
-    return res.status(500).json({ success: false, message: e.message })
+    return res.status(500).json({ success: false, message: e.message });
   }
-}
+};
 
 export const userSignIn = async (req, res) => {
   const { password, email } = req.body;
