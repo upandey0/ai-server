@@ -37,7 +37,7 @@ export const userSignUp = async (req, res) => {
     res.cookie('token', token, {
       expires: expirationDate,
       httpOnly: true,
-      domain: 'https://f-ai-serve.up.railway.app/', // Set the domain to the domain of your backend deployment
+      domain: 'https://f-ai-serve.up.railway.app/', 
       path: '/', // Set the path to the root
       sameSite: 'strict',
     });
@@ -95,7 +95,7 @@ export const userSignIn = async (req, res) => {
       res.cookie('token', token, {
         expires: expirationDate,
         httpOnly: true,
-        domain: 'https://f-ai-serve.up.railway.app/', // Set the domain to the domain of your backend deployment
+        domain: 'https://f-ai-serve.up.railway.app/', 
         path: '/', // Set the path to the root
         sameSite: 'strict',
       });
@@ -107,30 +107,32 @@ export const userSignIn = async (req, res) => {
 }
 
 export const userLogOut = async (req, res) => {
-  const token = req.cookies.token;
-  if (!token) {
-    return res.status(404).json({ success: false, message: 'Unauthorized user' });
-  }
-
   try {
-    // Decode the token to get the user ID and email
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Unauthorized user' });
+    }
+
+    // Verify the token
     const { id, email } = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     // Clear the cookie
     res.clearCookie('token', {
-      domain: 'https://f-ai-serve.up.railway.app/', // Set the domain to the domain of your backend deployment
-      path: '/', // Set the path to the root
+      domain: 'https://f-ai-serve.up.railway.app/', 
+      path: '/',
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
     });
 
-    // Log the user out or perform any other necessary actions
-    // ...
 
     return res.status(200).json({ success: true, message: 'Logout successful' });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Error logging out', error: error.message });
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ success: false, message: 'Unauthorized user' });
+    } else {
+      return res.status(500).json({ success: false, message: 'Error logging out', error: error.message });
+    }
   }
 };
 
