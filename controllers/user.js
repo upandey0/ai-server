@@ -37,12 +37,13 @@ export const userSignUp = async (req, res) => {
     );
 
     // Set the cookie with a 2-day expiration
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
     const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
     res.cookie('token', token, {
       expires: expirationDate,
       httpOnly: true,
-      path: '/',
-      sameSite: 'strict',
+      sameSite: 'none',
     });
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
     return res.status(201).json({
@@ -73,7 +74,7 @@ export const userSignIn = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Invalid password' })
       }
       const id = user._id;
-      const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY, {expiresIn: '2d'});
+      const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY, { expiresIn: '2d' });
       let allCompanies = [];
       const allofficeIds = user.companies;
 
@@ -92,10 +93,12 @@ export const userSignIn = async (req, res) => {
           return res.status(500).json({ success: false, message: e.message })
         }
       }
-      
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
+
       const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
       res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-      return res.cookie('token', token , { expires: expirationDate, httpOnly: true }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
+      return res.cookie('token', token, { expires: expirationDate, httpOnly: true, SameSite: 'none' }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
     }
   } catch (e) {
     return res.json(e);
