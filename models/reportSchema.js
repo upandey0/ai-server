@@ -12,7 +12,6 @@ const reportSchema = new Schema(
     },
     title: {
       type: String,
-      required: true,
     },
     companyBelongs : {
       type: Schema.Types.ObjectId,
