@@ -37,7 +37,7 @@ export const userSignUp = async (req, res) => {
     res.cookie('token', token, {
       expires: expirationDate,
       httpOnly: true,
-      domain: '.railway.app', // Set the domain to the domain of your backend deployment
+      domain: 'https://f-ai-serve.up.railway.app/', // Set the domain to the domain of your backend deployment
       path: '/', // Set the path to the root
       sameSite: 'strict',
     });
