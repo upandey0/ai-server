@@ -34,7 +34,7 @@ export const userSignUp = async (req, res) => {
 
     // Set the cookie with a 2-day expiration
     const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
-    res.cookie('token', token, { expires: expirationDate });
+    res.cookie('token', token, { expires: expirationDate, httpOnly: true, secure: true, sameSite: 'strict' });
 
     res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -91,7 +91,8 @@ export const userSignIn = async (req, res) => {
       res.setHeader('Access-Control-Allow-Credentials', 'true');
       res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      return res.cookie('token', token).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
+      const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
+      return res.cookie('token', token , { expires: expirationDate }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
     }
   } catch (e) {
     return res.json(e);
