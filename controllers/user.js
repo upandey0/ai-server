@@ -4,6 +4,7 @@ import Company from '../models/companySchema.js'
 import bcrypt from 'bcryptjs'
 import emailValidator from 'email-validator'
 
+
 export const userSignUp = async (req, res) => {
   try {
     const { email, username, password } = req.body;
@@ -35,15 +36,15 @@ export const userSignUp = async (req, res) => {
       { expiresIn: '2d' } // Set the token expiration to 2 days
     );
 
-    // Set the cookie with a 2-day expiration, secure flag, and SameSite=none
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
+    // Set the cookie with a 2-day expiration
+    ;
     const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
     res.cookie('token', token, {
       expires: expirationDate,
       httpOnly: true,
-      sameSite: 'none',
-      secure: true
+      secure: true, // Ensure secure attribute for HTTPS
+      path: '/', // Set path to root
+      sameSite: 'none', // Allow cross-site cookies
     });
   
     return res.status(201).json({
@@ -74,34 +75,36 @@ export const userSignIn = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Invalid password' })
       }
       const id = user._id;
-      const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY, { expiresIn: '2d' });
+      const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY, {expiresIn: '2d'});
       let allCompanies = [];
       const allofficeIds = user.companies;
 
       const toSendUser = {
         email: user.email,
         isCompanySet: user.isCompanySet,
+
       }
 
       for (const office of allofficeIds) {
         try {
           const company = await Company.findOne({ _id: office })
+
           allCompanies.push(company);
         } catch (e) {
           return res.status(500).json({ success: false, message: e.message })
         }
       }
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
-
+      
       const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
-    
-      return res.cookie('token', token, {
+      res.cookie('token', token, {
         expires: expirationDate,
         httpOnly: true,
-        sameSite: 'none',
-        secure: true
-      }).status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
+        secure: true, // Ensure secure attribute for HTTPS
+        path: '/', // Set path to root
+        sameSite: 'none', // Allow cross-site cookies
+      });
+    
+      return res.status(200).json({ success: true, message: "User Logged In", allCompanies, toSendUser });
     }
   } catch (e) {
     return res.json(e);
@@ -114,10 +117,7 @@ export const userLogOut = async (req, res) => {
     return res.status(404).json({ success: false, message: 'Unautorized user' });
 
   const { id, auth0Id } = jwt.decode(token, process.env.JWT_SECRET_KEY);
-  res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+ 
   res.clearCookie('token');
 
   try {
@@ -125,6 +125,7 @@ export const userLogOut = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Error logging out', error: error.message });
   }
+
 }
 
 export const handleRefresh = async (req, res) => {
@@ -140,10 +141,7 @@ export const handleRefresh = async (req, res) => {
     if (!user) {
       return res.json({ success: false, message: 'Invalid' });
     } else {
-      res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+     
       return res.status(200).json({ success: true, message: 'User Logged In', user });
     }
   } catch (e) {
