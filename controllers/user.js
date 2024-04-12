@@ -30,17 +30,20 @@ export const userSignUp = async (req, res) => {
       username,
     });
     const savedUser = await newUser.save();
-    const token = jwt.sign({ id: savedUser._id, email: savedUser.email }, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(
+      { id: savedUser._id, email: savedUser.email },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '2d' } // Set the token expiration to 2 days
+    );
 
     // Set the cookie with a 2-day expiration
     const expirationDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000); // 2 days from now
     res.cookie('token', token, {
       expires: expirationDate,
       httpOnly: true,
-      path: '/', // Set the path to the root
+      path: '/',
       sameSite: 'strict',
     });
-
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
     return res.status(201).json({
       success: true,
@@ -70,7 +73,7 @@ export const userSignIn = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Invalid password' })
       }
       const id = user._id;
-      const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY);
+      const token = jwt.sign({ id, email }, process.env.JWT_SECRET_KEY, {expiresIn: '2d'});
       let allCompanies = [];
       const allofficeIds = user.companies;
 
