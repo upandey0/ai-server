@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 dotenv.config()
 
-const MONGODB_URI = 'mongodb+srv://ujjwal:ujjwal123@cluster0.tl9vhar.mongodb.net/f-ai?retryWrites=true&w=majority&appName=Cluster0' || process.env.MONGODB_URI
+const MONGODB_URI = process.env.MONGO_CONNECTION_URI
 
 
 const dbConnection = async () =>{
