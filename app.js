@@ -11,7 +11,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(
     cors({
-      origin: "https://fai-web.vercel.app/",
+      origin: ["https://fai-web.vercel.app"],
       credentials: true
     })
   );
