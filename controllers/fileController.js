@@ -9,7 +9,7 @@ export const uploadFile = async (req, res) => {
   const serviceAccount = {
     
       "type": "service_account",
-      "project_id": "f-ai-a8fb5",
+      "project_id": process.env.PROJECT_ID,
       "private_key" : process.env.private_key,
       "private_key_id": process.env.private_key_id,
       "client_email": process.env.client_email,
