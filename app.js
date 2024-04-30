@@ -17,7 +17,7 @@ app.use(
   );
   
 app.get('/', (req,res)=>{
-    res.send('Hello There from my deployed Sercer')
+    res.send('Hello There from my deployed Server')
 })
 app.use(express.json());
 app.use(cookieParser());

@@ -57,10 +57,7 @@ const reportUpload = async (req, res) => {
       title,
       companyBelongs: companyId,
     });
-    res.setHeader('Access-Control-Allow-Origin', 'https://fa-ai-client-dashboard.vercel.app');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
     return res.status(201).json({ report, success: true });
   } catch (e) {
     return res.status(500).json({ message: e.message, success: false });

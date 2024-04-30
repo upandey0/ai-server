@@ -1,12 +1,13 @@
-import admin from 'firebase-admin'
-import * as fs from 'fs';
+import {initializeApp} from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 
-const serviceAccount = JSON.parse(fs.readFileSync('f-ai.json', 'utf8'));
+const firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+}
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.STORAGE_BUCKET
-}, 'f-ai')
-
-const storage = admin.storage()
-export default storage;
+export const app = initializeApp(firebaseConfig)
